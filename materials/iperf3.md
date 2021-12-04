@@ -1,11 +1,13 @@
-## Скорость соединения
-Базовая единица измерения скорости передачи информации - это биты в секунду (bps)
+## Connection speed
 
-Разница между байтами в секунду (B/s) и bps такая же, как и между байтами и битами: 1 B/s = 8 bps.
+The basic unit of information transfer rate is bits per second (bps).
 
-Аналогично разница между килобайтами в секунду (KB/s) и B/s такая же, как и между килобайтами и байтами: 1 KB/s = 1024 B/s. И так далее.
+The difference between bytes per second (B/s) and bps is the same as the difference between bytes and bits: 1 B/s = 8 bps.
 
-## Утилита **iperf3**
+Similarly, the difference between kilobytes per second (KB/s) and B/s is the same as the difference between kilobytes and bytes: 1 KB/s = 1024 B/s. And so on.
+
+## **iperf3**
+
 **iperf3** is a program for performing real-time network throughput measurements.
 It is one of the powerful tools for testing the maximum achievable bandwidth in IP networks (supports IPv4 and IPv6).
 

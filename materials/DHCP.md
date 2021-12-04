@@ -1,11 +1,9 @@
-## Протокол **DHCP**
-**DHCP** — протокол прикладного уровня модели TCP/IP, служит для назначения IP-адреса клиенту.
-IP-адрес можно назначать вручную каждому клиенту, то есть компьютеру в локальной сети.
-Но в больших сетях это очень трудозатратно, к тому же, чем больше локальная сеть, тем выше возрастает вероятность ошибки при настройке.
-Поэтому для автоматизации назначения IP был создан протокол **DHCP**.
+## **DHCP** Protocol
 
-Получение адреса проходит в четыре шага.
-Этот процесс называют *DORA* по первым буквам каждого шага:
+**DHCP** is a TCP/IP model application layer protocol used to assign an IP address to a client. An IP address can be manually assigned to each client, i.e. to a computer within a local network. But in large networks it’s very time-consuming and moreover, the larger the local network, the higher the chance of configuration error. This is why the **DHCP** protocol was created to automate IP assignment.
+
+It takes four steps to get an address.
+This process is called *DORA* by the first letters of each step:
 - Discovery
 - Offer
 - Request
@@ -13,17 +11,19 @@ IP-адрес можно назначать вручную каждому кли
 
 <img src="../misc/images/dhcp.png" alt="network_route" width="500"/>
 
-#### Опции **DHCP**
-Для работы в сети клиенту требуется не только IP, но и другие параметры **DHCP** — например, маска подсети, шлюз по умолчанию и адрес сервера.
-Опции представляют собой пронумерованные пункты, строки данных, которые содержат необходимые клиенту сервера параметры конфигурации.
-Дадим описания некоторым опциям:
-- Option 1 — маска подсети IP; 
-- Option 3 — основной шлюз; 
-- Option 6 — адрес сервера DNS (основной и резервный); 
-- Option 51 определяет, на какой срок IP-адрес предоставляется в аренду клиенту; 
-- Option 55 — список запрашиваемых опций. Клиент всегда запрашивает опции для правильной конфигурации. Отправляя сообщение с Option 55, клиент выставляет список запрашиваемых числовых кодов опций в порядке предпочтения. **DHCP**-сервер старается отправить ответ с опциями в том же порядке. 
+#### **DHCP** Options
+
+The client needs not only the IP but also other **DHCP** options for networking - such as subnet mask, default gateway and server address. Options represent numbered points, lines of data that contain the configuration parameters required by the server client.
+
+Let's describe some of the options:
+- Option 1 - IP subnet mask;
+- Option 3 - the default gateway;
+- Option 6 - DNS server address (primary and backup);
+- Option 51 defines for how long the IP address is leased to the client;
+- Option 55 is the list of requested options. The client always requests options for the correct configuration. By sending a message with Option 55, the client sets the list of requested option numeric codes in order of preference. **DHCP** server tries to send a response with options in the same order.
 
 ##  Force **DHCP** Client (**dhclient**) to renew IP address
+
 You need to use Dynamic Host Configuration Protocol Client i.e., dhclient command.
 The client normally doesn’t release the current lease as it is not required by the DHCP protocol.
 Some cable ISPs require their clients to notify the server if they wish to release an assigned IP address.

@@ -1,17 +1,15 @@
-## Маршрутизация. Пример
+## Routing. Example.
+
 <img src="../misc/images/network_route.png" alt="network_route" width="500"/>
 
-Давайте рассмотрим (на иллюстрации) пример инфраструктуры с несколькими подсетями.
+Let's take a look (in the picture) at an example of an infrastructure with multiple subnets.
 
-Как видно в примере ниже, первая запись (строка) указана для сети *128.17.75*, все пакеты для данной сети будут отправлены на шлюз *128.17.75.20*,
-который является IP адресом самого хоста. Вторая запись - это маршрут по умолчанию, который применяется ко всем пакетам, посылаемым в сети,
-не указанные в данной таблице маршрутизации. Здесь маршрут лежит через хост papaya (IP *128.17.75.98*), который можно считать дверью во внешний мир.
-Данный маршрут должен быть прописан на всех машинах сети *128.17.75*, которые должны иметь доступ к другим сетям.
-Третья запись создана для петлевого интерфейса. Данный адрес используется, если машине необходимо подключиться к самой себе по протоколу **TCP/IP**.
-Последняя запись в таблице маршрутизации сделана для IP *128.17.75.20* и направляется на интерфейс lo,
-т.о. при подключении машины к самой себе на адрес *128.17.75.20*, все пакеты будут посылаться на интерфейс *127.0.0.1*.
+As you can see in the example below, the first entry (line) is for network *128.17.75.0/24*, all packets for this network will be sent to gateway *128.17.75.20*, which is the IP address of the host itself.
+The second entry is the default route, which is applied to all packets sent in the network, not specified in this routing table. Here the route is via host papaya (IP *128.17.75.98*), which is like a door to the outside world. This route must be written on all machines of the *128.17.75.0/24* network, which must have access to other networks. The third entry is created for the loopback interface. This address is used if the machine needs to connect to itself via **TCP/IP**.
 
-Пример таблицы маршрутизации для хоста eggplant:
+The last entry in the routing table is for IP *128.17.75.20* and is routed to the lo interface, so if the machine connects to itself on *128.17.75.20*, all packets will be sent to *127.0.0.1* interface.
+
+An example of a routing table for an eggplant host:
 ```
 [root@eggplant ~]# netstat -rn
 Kernel IP routing table
@@ -22,18 +20,18 @@ default          128.17.75.98   0.0.0.0         UGN       1500 0          0 eth0
 128.17.75.20     127.0.0.1      255.255.255.0   UH        3584 0          0 lo
 ```
 
-Если хост eggplant пожелает послать пакет хосту zucchini, (соответственно, в пакете будет указан отправитель - *128.17.75.20* и получатель - *128.17.75.37*),
-протокол IP определит на основании таблицы маршрутизации, что оба хоста принадлежат одной сети и пошлет пакет прямо в сеть, где zucchini его получит.
-Если более подробно сказать, то сетевая карта широковещательно кричит **ARP**-запросом "Кто такой IP *128.17.75.37*, это кричит *128.17.75.20*?".
-Все машины, получившие данное послание - игнорируют его, а хост с адресом *128.17.75.37* отвечает "Это я и мой MAC-адрес такой-то...",
-далее происходит соединение и обмен данными на основе **ARP** таблиц, в которых занесено соответствие IP-MAC адресов.
-"Кричит", то есть этот пакет посылается всем хостам. Это происходит, потому что MAC-адрес получателя указан широковещательный адрес (*FF:FF:FF:FF:FF:FF*).
-Такие пакеты получают все хосты сети.
+If the eggplant host wishes to send a packet to the zucchini host, (the packet will therefore contain a sender -*128.17.75.20* and a destination - *128.17.75.37*), the IP protocol will determine based on the routing table that both hosts belong to the same network and will send the packet directly to the network where zucchini will receive it.
+To be more specific, the network interface controller broadcasts an **ARP** request - "Who is IP *128.17.75.37*? This is *128.17.75.20* screaming".
 
-Давайте рассмотрим ситуацию, когда хост eggplant хочет послать пакет хосту, например, pear или еще дальше?
-В таком случае, получатель пакета будет - *128.17.112.21*, протокол IP попытается найти в таблице маршрутизации маршрут для сети *128.17.112*,
-но данного маршрута в таблице нет, по этому будет выбран маршрут по умолчанию, шлюзом которого является papaya (*128.17.75.98*).
-Получив пакет, papaya отыщет адрес назначения в своей таблице маршрутизации:
+All machines that receive this message ignore it, and the host with address *128.17.75.37* replies "That's me and my MAC address is such-and-such...",
+then they connect and exchange data based on **ARP** tables where IP-MAC addresses are matched. "Screams", meaning this packet is being sent to all hosts. This happens because the MAC address of the recipient is specified as a broadcast address (*FF:FF:FF:FF:FF:FF:FF*).
+Such packets are received by all network hosts.
+
+Let's consider a situation where a host eggplant wants to send a packet to a pear host, for example, or even further away?
+In this case, the destination of the packet will be - *128.17.112.21*, the IP protocol will try to find a route for *128.17.112* in the routing table, but this route is not there, so it will choose the default route, the gateway of which is papaya (*128.17.75.98*).
+
+
+After receiving the packet, papaya will look up the destination address in its routing table:
 ```
 [root@papaya ~]# netstat -rn
 Kernel IP routing table
@@ -46,18 +44,16 @@ default          128.17.112.40  0.0.0.0         UGN       1500 0          0 eth1
 128.17.112.3     127.0.0.1      255.255.255.0   UH        3584 0          0 lo
 ```
 
-Из примера видно, что papaya подключена к двум сетям *128.17.75*, через устройство eth0 и *128.17.112* через устройство eth1.
-Маршрут по умолчанию, через хост pineapple, который в свою очередь, является шлюзом во внешнюю сеть.
+In this example, you can see that papaya is connected to two networks: *128.17.75.0/24* via the eth0 device and *128.17.112* via the eth1 device.
 
-Соответственно, получив пакет для pear, маршрутизатор papaya увидит, что адрес назначения принадлежит сети *128.17.112* и направит пакет в соответствии со второй записью в таблице маршрутизации.
+The default route is via the pineapple host, which in its turn is the gateway to the external network.
 
-Таким образом, пакеты передаются от маршрутизатора к маршрутизатору, пока не достигнут адреса назначения.
+Therefore, after receiving the pear packet, the papaya router will see that the destination address belongs to the *128.17.112* and will forward the packet according to the second entry in the routing table.
 
-## Протокол **ICMP**
-Протокол **ICMP** - это протокол уведомления об ошибках.
+So, this is how packets are passed from router to router until they reach their destination address.
 
-Для того чтобы маршрутизаторы могли оповещать узлы сети о
-возникших ошибках или нештатных ситуациях, в стек TCP/IP введен
-механизм рассылки специальных сообщений, который назвали протоколом
-межсетевых управляющих сообщений (Internet Control Message Protocol, или
-**ICMP**).
+## **ICMP** protocol
+
+The **ICMP** protocol is an error notification protocol.
+
+The TCP/IP stack has a special messaging mechanism to allow routers to notify network nodes of errors or abnormal situations, called the Internet Control Message Protocol (**ICMP**).

@@ -1,113 +1,105 @@
-# Сети в Linux
+# Linux Network
 
-Настройка сетей в Linux на виртуальных машинах.
+Linux networks configuration on virtual machines.
 
+The russian version of the task can be found in the repository.
 
 ## Contents
 
 1. [Chapter I](#chapter-i)
 2. [Chapter II](#chapter-ii) \
-   2.1. [Стек протоколов TCP IP](#стек-протоколов-tcp-ip) \
-   2.2. [Адресация](#адресация) \
-   2.3. [Маршрутизация](#маршрутизация)
+   2.1. [TCP IP protocol stack](#tcp-ip-protocol-stack) \
+   2.2. [Addressing](#addressing) \
+   2.3. [Routing](#routing)
 3. [Chapter III](#chapter-iii) \
-   3.1. [Инструмент ipcalc](#part-1-инструмент-ipcalc) \
-   3.2. [Статическая маршрутизация между двумя машинами](#part-2-статическая-маршрутизация-между-двумя-машинами) \
-   3.3. [Утилита iperf3](#part-3-утилита-iperf3) \
-   3.4. [Сетевой экран](#part-4-сетевой-экран) \
-   3.5. [Статическая маршрутизация сети](#part-5-статическая-маршрутизация-сети) \
-   3.6. [Динамическая настройка IP с помощью DHCP](#part-6-динамическая-настройка-ip-с-помощью-dhcp) \
-   3.7. [Допополнительно. Проброс портов за NAT](#part-7-дополнительно-проброс-портов-за-nat) \
-   3.8. [Допополнительно. Знакомство с SSH Tunnels](#part-8-дополнительно-знакомство-с-ssh-tunnels)
+   3.1. [ipcalc tool](#ipcalc-tool) \
+   3.2. [Static routing between two machines](#part-2-static-routing-between-two-machines) \
+   3.3. [iperf3 utility](#part-3-iperf3-utility) \
+   3.4. [Network firewall](#part-4-network-firewall) \
+   3.5. [Static network routing](#part-5-static-network-routing) \
+   3.6. [Dynamic IP configuration using DHCP](#part-6-dynamic-ip-configuration-using-dhcp) \
+   3.7. [NAT](#part-7-nat) \
+   3.8. [Bonus. Introduction to SSH Tunnels](#part-8-bonus-introduction-to-ssh-tunnels)
 4. [Chapter IV](#chapter-iv)
 
 ## Chapter I
-Планета Земля, США, штат Калифорния, Комптон, джаз клуб "Seb's", наши дни.
 
-\> *В баре играет новая джаз-группа. Их музыка чуть энергичнее, чем Вы привыкли, но в таланте им не откажешь.*
+Planet Earth, USA, California, Compton, Seb's Jazz Club, nowadays.
 
-`—` Себастиан, ты отсидел уже неделю за столом в офисе. Как считаешь, ты научился работать в Linux'е? Впрочем, учитывая что ты опять мне позвонил посреди недели, думаю я и так знаю ответ...
+\> *There's a new jazz band playing at the bar. Their jazz is a little more energetic than you're used to, although they're certainly talented.*
 
-`—` Постепенно разбираюсь, но явно не так быстро, как хотелось бы.
+`—` Sebastian, you have been sitting behind a desk in the office for a week now. Do you think you've learned how to use Linux? But given that you called me again in the middle of the week, I think I already know the answer...
 
-`—` Готов ли ты завтра выйти на работу?
+`—` I'm slowly getting the hang of it, but obviously not as quickly as I'd like.
 
-`—` Я не понимаю, не понимаю, дружище. Мне говорят заняться настройкой сетей. Но для меня это просто слова. Я хочу встретить молодого себя, когда я был глупым мальчишкой, который согласился пойти на работу сисадмином, отговорить его, объяснить, что к чему, но не могу. Что же делать, дружище?
+`—` Are you ready to go to work tomorrow?
 
-`—` Ну, ну, не стоит отчаиваться. Настройка сетей не так и страшна. Я с радостью расскажу тебе о ней, если ответишь на один вопрос: почему твой отец вообще устроил тебя именно сисадмином? Мы ведь в его баре сидим, почему не сюда? Это куда уж легче.
+`—` I don't get it, I just don't get it, man. They tell me to work on configuration of networks. But to me it's just words. I want to meet my young self when I was a stupid kid who took the job as a sysadmin, talk him out of it, explain what's what, but I can't. What should I do, buddy?
 
-`—` Я не знаю, кто разберет этого старика. Говорит что-то про самостоятельность и расширение кругозора...
+`—` Well, come on, you shouldn't despair. Configuring networks isn't so bad. I'd be happy to tell you about it if you answer one question: why did your father get you the job as a sysadmin anyway? I mean, this is his bar, why not here? That would be an easier job.
 
-`—` Хорошо, тогда продолжим расширять твой кругозор. Доставай ноутбук, поднимай виртуальную машину, покажу что и как.
+`—` Who knows what's on the old man's mind. He says something about being independent and broadening your mind...
 
-\> *Новичков сменяют постоянные музыканта бара, музыка замедляется, официант все никак не принесет вам ваш заказ.*
+`—` Well, then, let's keep broadening your mind. Get your laptop out, start the virtual machine, I'll show you what's what.
 
-\> *Пока Себастиан неуверенно поднимает виртуальную машину, Вы решаете поделиться основной информацией о сетях на Linux.*
+\> *The regular band replace the new one, the music slows down and the waiter still hasn’t brought your order.*
+
+\> *While Sebastian is hesitatingly start the virtual machine, you decide to share some basic information about networks in Linux.*
+
 
 ## Chapter II
-### Стек протоколов TCP IP
-Собственно, что есть сеть? Сеть - это более 2х компьютеров, объединенных между собой какими-то каналами связи, в более сложном примере - каким-то сетевым
-оборудованием и обменивающиеся между собой информацией по определенным правилам. Эти правила "диктуются" стеком протоколов **TCP/IP**.
+### TCP IP protocol stack
 
-Transmission Control Protocol/Internet Protocol (Стек протоколов **TCP/IP**) - если сказать простым языком, это набор взаимодействующих протоколов разных 
-уровней (каждый уровень взаимодействует с соседним, то есть состыковывается, поэтому и стек), согласно которым происходит обмен данными в сети. 
-Итого, стек протоколов **TCP/IP** - это набор наборов правил :) Тут может возникнуть 
-резонный вопрос: а зачем же иметь много протоколов? Неужели нельзя обмениваться всем по одному протоколу?
+What exactly is a network? A network is a connection of at least 2 computers by some kind of communication links or in a more complicated cases, by some networking hardware. The data is exchanged between them according to certain rules, and these rules are "dictated" by the **TCP/IP** protocol stack.
 
-Все дело в том, что каждый протокол описывает строго отведенные ему правила. Кроме того, протоколы разделены по уровням функциональности, что позволяет работе 
-сетевого оборудования и программного обеспечения становится гораздо проще, прозрачнее и выполнять "свой" круг задач. Для разделения данного набора протоколов 
-по уровням была разработана модель сетевого взаимодействия **OSI** (англ. Open Systems Interconnection Basic Reference Model, 1978 г., она же - базовая эталонная 
-модель взаимодействия открытых систем). Модель **OSI** состоит из семи различных уровней. Уровень отвечает за отдельный участок в работе коммуникационных систем, 
-не зависит от рядом стоящих уровней – он только предоставляет определённые услуги. Каждый уровень выполняет свою задачу в соответствии с набором правил, 
-называемым протоколом.
+TCP/IP stands for Transmission Control Protocol/Internet Protocol and, to put it simply, is a set of communication protocols of different layers (each layer communicates with its neighbor, i.e. docks, hence the name stack), according to which data is exchanged in a network.
+So, the protocol stack **TCP/IP** is a set of rule sets :) This may raise a fair question: why have so many protocols? Can't everything be exchanged over one protocol?
 
-### Адресация
-В сети, построенной на стеке протоколов **TCP/IP** каждому хосту (компьютеру или устройству подключенному к сети) присвоен IP-адрес. 
-IP-адрес представляет собой 32-битовое двоичное число. 
-Удобной формой записи IP-адреса (**IPv4**) является запись в виде четырёх десятичных чисел (от 0 до 255), разделённых точками, например, *192.168.0.1*. 
-В общем случае, IP-адрес делится на две части: адрес сети (подсети) и адрес хоста:
+The thing is that each protocol describes strictly the rules that are allocated to it. Besides, protocols are divided into functionality layers, allowing networking hardware and software to perform much more simply, clearer and to do "their" range of tasks.
+There was developed an **OSI** model (Open Systems Interconnection Basic Reference Model) in 1978 to divide this set of protocols into layers.
+The **OSI** model consists of seven different layers. Each layer is responsible for a specific area in the operation of the communication systems, it does not depend on the layers next to it - it only provides certain services. Each layer performs its task according to a set of rules, called a protocol.
+
+### Addressing
+
+In a network based on the **TCP/IP** protocol stack, each host (computer or device connected to the network) has an IP address. IP address is 32-bit number. It is usually represented in dot-decimal notation, consisting of four decimal numbers, each ranging from 0 to 255, separated by dots, e.g., *192.168.0.1*.
+In general, an IP address is divided into two parts: the network (subnet) address and the host address:
 
 <img src="misc/images/subnetwork_mask.png" alt="subnetwork_mask"/>
 
-Как видно из иллюстрации, есть такое понятие как сеть и подсеть. 
-Думаю, что из значений слов понятно, что IP адреса делятся на сети, а сети в свою очередь делятся на подсети с помощью маски подсети 
-(корректнее будет сказать: адрес хоста может быть разбит на подсети).
+As you can see in the picture, there are such things as network and subnet.
+I think it's clear from the meaning of those words that IP addresses are divided into networks, and networks are divided into subnets using a subnet mask
+(it would be more accurate to say: a host address can be divided into subnets).
 
-Кроме адреса хоста в сети **TCP/IP** есть такое понятие как порт. Порт является числовой характеристикой какого-то системного ресурса. 
-Порт выделяется приложению, выполняемому на некотором сетевом хосте, для связи с приложениями, выполняемыми на других сетевых хостах 
-(в том числе с другими приложениями на этом же хосте). С программной точки зрения, порт есть область памяти, которая контролируется каким-либо сервисом.
+Apart from the host address in a **TCP/IP** network, there is such a thing as a port. A port is a numerical characteristic of some system resource.
+A port is given to an application running on some network host to communicate with applications running on other network hosts (including other applications on the same host). In software terms, a port is an area of memory that is controlled by a service.
 
-IP протокол находится ниже **TCP** и **UDP** в иерархии протоколов и отвечает за передачу и маршрутизацию информации в сети. 
-Для этого, протокол IP заключает каждый блок информации (пакет **TCP** или **UDP**) в другой пакет - IP пакет или дейтаграмма IP, 
-который хранит заголовок об источнике, получателе и маршруте.
+The IP protocol lies below **TCP** and **UDP** in the protocol hierarchy and is responsible for transmitting and routing information in a network.
+To do this, IP encapsulates each chunk of information (**TCP** or **UDP** packet) in another packet - an IP packet or IP datagram, which stores a header about the source, destination and route.
 
-Если провести аналогию с реальным миром, сеть **TCP/IP** - это город. Названия улиц и проулков - это сети и подсети. Номера строений - это адреса хостов. 
-В строениях, номера кабинетов/квартир - это порты. Точнее, порты - это почтовые ящики, в которые ожидают прихода корреспонденции получатели (службы). 
-Соответственно, номера портов кабинетов 1,2 и т.п. обычно отдаются директорам и руководителям, как привилегированным, 
-а рядовым сотрудникам достаются номера кабинетов с большими цифрами. При отправке и доставке корреспонденции, информация упаковывается в конверты (ip-пакеты), 
-на которых указывается адрес отправителя (ip и порт) и адрес получателя (ip и порт).
+To draw an analogy with the real world, a **TCP/IP** network is a city. The names of streets and alleys are networks and subnets. The building numbers are the addresses of the hosts.
+In buildings, office/apartment numbers are ports. More precisely, the ports are the mailboxes where the recipients (services) are waiting for their correspondence to arrive. Accordingly, office port numbers 1,2 etc. are usually given to directors and executives, as the privileged ones, and ordinary employees get office numbers with larger numbers. For sending and delivering correspondence, information is packed into envelopes (ip-packets),
+which contain the address of the sender (ip and port) and the address of the recipient (ip and port).
 
-Следует отметить, что протокол IP не имеет представления о портах, за интерпретацию портов отвечает **TCP** и **UDP**, по аналогии **TCP** и **UDP** не обрабатывают IP-адреса.
+It must be mentioned that the IP protocol has no notion of ports, **TCP** and **UDP** are responsible for port interpretation, by analogy **TCP** and **UDP** do not process IP addresses.
 
-### Маршрутизация
+### Routing
+
 <img src="misc/images/network_route.png" alt="network_route" width="500"/>
 
-Может возникнуть вопрос, а как же один компьютер соединиться с другим? 
-Откуда он знает, куда посылать пакеты?
+You may ask, how does one computer connect to another one? How does it know where to send packets?
 
-Для разрешения этого вопроса, сети между собой соединены шлюзами (маршрутизаторами). 
-Шлюз - это тот же хост, но имеющий соединение с двумя и более сетями, который может передавать информацию между сетями и направлять пакеты в другую сеть. 
-На рисунке роль шлюза выполняет pineapple и papaya, имеющих по 2 интерфейса, подключенные к разным сетям.
+To resolve this issue, networks are linked by gateways (routers).
+A gateway is the same as a host but with a connection to two or more networks and can transfer information between networks and send packets to another network.
+In the picture the gateway is pineapple and papaya with 2 interfaces each connected to different networks.
 
-Чтобы определить маршрут передачи пакетов, IP использует сетевую часть адреса (маску подсети). 
-Для определения маршрута, на каждой машине в сети имеется таблица маршрутизации (routing table), которая хранит список сетей и шлюзов для этих сетей. 
-IP "просматривает" сетевую часть адреса назначения в проходящем пакете и, если для этой сети есть запись в таблице маршрутизации, 
-то пакет отправляется на соответствующий шлюз.
+IP uses the network part of the address (subnet mask) to determine the route of packets.
+To determine the route, each computer in the network has a routing table that maintains a list of networks and gateways for these networks.
+The IP "reads" the network part of the destination address in a passing packet and if there is an entry in the routing table for that network, the packet is sent to the corresponding gateway.
 
-В Linux ядро операционной системы хранит таблицу маршрутизации в файле */proc/net/route*. 
-Просмотреть текущую таблицу маршрутизации можно командой `netstat -rn` (r - routing table, n - не преобразовывать IP в имена), `route` или `ip r`.
+In Linux, the operating system kernel stores the routing table in the */proc/net/route* file.
+You can view the current routing table with the `netstat -rn` (r - routing table, n - do not convert IP to names) `route` or `ip r` commands.
 
-Пример таблицы маршрутизации для хоста eggplant:
+Here is an example of a routing table for an eggplant host:
 ```
 [root@eggplant ~]# netstat -rn
 Kernel IP routing table
@@ -118,206 +110,235 @@ default          128.17.75.98   0.0.0.0         UGN       1500 0          0 eth0
 128.17.75.20     127.0.0.1      255.255.255.0   UH        3584 0          0 lo
 ```
 
-Значения колонок:
-- Destination - адреса сетей (хостов) назначения. При этом, при указании сети, адрес обычно заканчивается на ноль. 
-- Gateway - адрес шлюза для указанного в первой колонке хоста/сети. Третья колонка - маска подсети, для которой работает данный маршрут. 
-- Flags - информация об адресе назначения (U - маршрут работает, N - маршрут для сети, H - маршрут для хоста и т.п.). 
-- MSS - число байтов, которое может быть отправлено за 1 раз, 
-- Window - количество фреймов, которое может быть отправлено до получения подтверждения, 
-- irtt - статистика использования маршрута, 
-- Iface - указывает сетевой интерфейс, используемый для маршрута (eth0, eth1 и т.п.)
+Meanings of the columns:
+- Destination - addresses of destination networks (hosts). If a network is specified, the address usually ends with a zero.
+- Gateway - the gateway address for the host/network specified in the first column. The third column is the subnet mask for which this route works.
+- Flags - information about destination address (U - route works, N - route for network, H - route for host, etc.)
+- MSS - number of bytes that can be sent at one time
+- Window - number of frames that can be sent before confirmation is received
+- irtt - route usage statistics
+- Iface - specifies the network interface used for the route (eth0, eth1, etc.)
 
-\> *Как и в прошлый раз, ещё больше полезной информации вы сохраняете в папке materials*
+\> *As last time, you save even more useful information in the materials folder*
 
 ## Chapter III
-В качестве результата работы должен быть предоставлен отчет по выполненным задачам. В каждой части задания указано, что должно быть помещено в отчёт, после её выполнения. Это могут быть ответы на вопросы, скриншоты и т.д.
-- В репозиторий, в папку src, должен быть загружен отчёт с расширением .md.
-- В отчёте должны быть выделены все части задания, как заголовки 2-го уровня.
-- В рамках одной части задания всё, что помещается в отчёт, должно быть оформлено в виде списка.
-- Каждый скриншот в отчёте должен быть кратко подписан (что показано на скриншоте).
-- Все скриншоты обрезаны так, чтобы была видна только нужная часть экрана.
-- На одном скриншоте допускается отображение сразу нескольких пунктов задания, но они все должны быть описаны в подписи к скриншоту.
-- На все виртуальные машины, созданные в процессе выполнения задания, устанавливать **Ubuntu 20.04 Server LTS**
 
-## Part 1. Инструмент **ipcalc**
-`-` Итак, начнём наше погружение в удивительный мир сетей со знакомства с IP адресами. А использовать для этого мы будем инструмент **ipcalc**.
+As a result of the work you should provide a report with completed tasks. Each part of the task describe what should be added to the report once it has been completed. This can be answers to questions, screenshots, etc.
+- A report with a .md extension must be uploaded to the repository, in the src folder.
+- All parts of the task should be highlighted in the report as level 2 headings.
+- Within one part of the task, everything that is added to the report must be in the form of the list.
+- Each screenshot in the report must be briefly captioned (what’s in the screenshot).
+- All screenshots must be cropped so that only the relevant part of the screen is shown.
+- It’s allowed to have several task points shown in one screenshot, but they must all be described in the caption.
+- Install **Ubuntu 20.04 Server LTS** on all virtual machines created during the task.
 
-**== Задание ==**
+## Part 1. **ipcalc** tool
 
-##### Поднять виртуальную машину (далее -- ws1)
+`-` So, let's start our dive into the wonderful world of networks by getting to know IP addresses. And for that we will use **ipcalc** tool.
 
-#### 1.1. Сети и маски
-##### Определить и записать в отчёт:
-##### 1) Адрес сети *192.167.38.54/13*
-##### 2) Перевод маски *255.255.255.0* в префиксную и двоичную запись, */15* в обычную и двоичную, *11111111.11111111.11111111.11110000* в обычную и префиксную
-##### 3) Минимальный и максимальный хост в сети *12.167.38.4 при масках; /8*, *11111111.11111111.00000000.00000000*, *255.255.254.0* и */4*
+**== Task ==**
+
+##### Start a virtual machine (hereafter -- ws1)
+
+#### 1.1. Networks and Masks
+##### Define and write in the report:
+##### 1) Network address of *192.167.38.54/13*
+##### 2) Conversion of the mask *255.255.255.0* to prefix and binary, */15* to normal and binary, *1111111111.11111111.11111111.11110000* to normal and prefix
+##### 3) Minimum and maximum host in *12.167.38.4* network with masks: */8*, *1111111111.11111111.00000000.00000000*, *255.255.254.0* and */4*
+
 #### 1.2. localhost
-##### Определить и записать в отчёт, можно ли обратиться к приложению, работающему на localhost, со следующими IP: *194.34.23.100/16*, *127.0.0.2/24*, *127.1.0.1/8*, *128.0.0.1/8*
-#### 1.3. Диапазоны и сегменты сетей
-##### Определить и записать в отчёт:
-##### 1) какие из перечисленных IP можно использовать в качестве публичного, а какие только в качестве частных: *10.0.0.45/8*, *134.43.0.2/16*, *192.168.4.2/16*, *172.20.250.4/12*, *172.0.2.1/12*, *192.172.0.1/12*, *172.68.0.2/12*, *172.16.255.255/12*, *10.10.10.10/8*, *192.169.168.1/16*
-##### 2) какие из перечисленных IP адресов шлюза возможны у сети *10.10.0.0/18*: *10.0.0.1*, *10.10.0.2*, *10.10.10.10*, *10.10.100.1*, *10.10.1.255*
+##### Define and write in the report whether an application running on localhost can be accessed with the following IPs: *194.34.23.100/16*, *127.0.0.2/24*, *127.1.0.1/8*, *128.0.0.1/8*
 
-## Part 2. Статическая маршрутизация между двумя машинами
-`-` Теперь разберёмся, как связать две машины, используя статическую маршрутизацию.
+#### 1.3. Network ranges and segments
+##### Define and write in a report:
+##### 1) which of the listed IPs can be used as public and which only as private: *10.0.0.45/8*, *134.43.0.2/16*, *192.168.4.2/16*, *172.20.250.4/12*, *172.0.2.1/12*, *192.172.0.1/12*, *172.68.0.2/12*, *172.16.255.255/12*, *10.10.10.10/8*, *192.169.168.1/16*
+##### 2) which of the listed gateway IP addresses are possible for *10.10.0.0/18* network: *10.0.0.1*, *10.10.0.2*, *10.10.10.10*, *10.10.100.1*, *10.10.1.255*
 
-**== Задание ==**
+## Part 2. Static routing between two machines
 
-##### Поднять две виртуальные машины (далее -- ws1 и ws2)
-##### С помощью команды `ip a` посмотреть существующие сетевые интерфейсы
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-##### Описать сетевой интерфейс, соответствующий внутренней сети, на обеих машинах и задать следующие адреса и маски: ws1 - *192.168.100.10*, маска */16*, ws2 - *172.24.116.8*, маска */12*
-- В отчёт поместить скрины с содержанием изменённого файла *etc/netplan/00-installer-config.yaml* для каждой машины.
-##### Выполнить команду `netplan apply` для перезапуска сервиса сети
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-#### 2.1. Добавление статического маршрута вручную
-##### Добавить статический маршрут от одной машины до другой и обратно при помощи команды вида `ip r add`
-##### Пропинговать соединение между машинами
-- В отчёт поместить скрин с вызовом и выводом использованных команд.
-#### 2.2. Добавление статического маршрута с сохранением
-##### Перезапустить машины
-##### Добавить статический маршрут от одной машины до другой с помощью файла *etc/netplan/00-installer-config.yaml*
-- В отчёт поместить скрин с содержанием изменённого файла *etc/netplan/00-installer-config.yaml*.
-##### Пропинговать соединение между машинами
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
+`-` Now let's figure out how to connect two machines using static routing.
 
-## Part 3. Утилита **iperf3**
-`-` Теперь, когда мы связали две машины, ответь мне: что самое важно при передаче информация между машинами?
+**== Task ==**
 
-`-` Скорость соединения?
+##### Start two virtual machines (hereafter -- ws1 and ws2)
 
-`-` Всё верно. Будем её проверять с помощью утилиты **iperf3**.
+##### View existing network interfaces with the `ip a` command
+- Add a screenshot with the call and output of the used command to the report.
+##### Describe the network interface corresponding to the internal network on both machines and set the following addresses and masks: ws1 - *192.168.100.10*, mask */16 *, ws2 - *172.24.116.8*, mask */12*
+- Add screenshots of the changed *etc/netplan/00-installer-config.yaml* file for each machine to the report.
+##### Run the `netplan apply` command to restart the network service
+- Add a screenshot with the call and output of the used command to the report.
 
-**== Задание ==**
+#### 2.1. Adding a static route manually
+##### Add a static route from one machine to another and back using a
+`ip r add` command.
+##### Ping the connection between the machines
+- Add a screenshot with the call and output of the used commands to the report.
 
-*В данном задании используются виртуальные машины ws1 и ws2 из Части 2*
-#### 3.1. Скорость соединения
-##### Перевести и записать в отчёт: 8 Mbps в MB/s, 100 MB/s в Kbps, 1 Gbps в Mbps
-#### 3.2. Утилита **iperf3**
-##### Измерить скорость соединения между ws1 и ws2
-- В отчёт поместить скрины с вызовом и выводом использованных команд.
+#### 2.2. Adding a static route with saving
+##### Restart the machines
+##### Add static route from one machine to another using *etc/netplan/00-installer-config.yaml* file
+- Add screenshots of the changed *etc/netplan/00-installer-config.yaml*
+  file to the report.
+##### Ping the connection between the machines
+- Add a screenshot with the call and output of the used command to the report.
 
-## Part 4. Сетевой экран
-`-` После соединения машин, перед нами стоит следующая задача: контролировать информацию, проходящую по соединению. Для этого используются сетевые экраны.
+## Part 3. **iperf3** utility
 
-**== Задание ==**
+`-` Now that we have linked two machines, tell me: What is the most important thing about transferring information between machines?
 
-*В данном задании используются виртуальные машины ws1 и ws2 из Части 2*
-#### 4.1. Утилита **iptables**
-##### Создать файл */etc/firewall.sh*, имитирующий фаерволл, на ws1 и ws2:
+`-` The connection speed?
+
+`-` That's right. We’ll check it with **iperf3** utility.
+
+**== Task ==**
+
+* In this task you need to use ws1 and ws2 from *Part 2*.
+
+#### 3.1. Connection speed
+##### Convert and write results in the report: 8 Mbps to MB/s, 100 MB/s to Kbps, 1 Gbps to Mbps
+
+#### 3.2. **iperf3** utility
+##### Measure connection speed between ws1 and ws2
+- Add a screenshots with the call and output of the used commands to the report.
+
+## Part 4. Network firewall
+
+`-` After connecting the machines, the next our task is to control the information flowing over the connection. For that we use firewalls.
+
+**== Task ==**
+
+* In this task you need to use ws1 and ws2 from *Part 2*.
+
+#### 4.1. **iptables** utility
+##### Create a */etc/firewall.sh* file simulating the firewall on ws1 and ws2:
 ```shell
 #!/bin/sh
 
-# Удаление всех правил в таблице "filter" (по-умолчанию).
-iptables –F
-iptables -X
+# Deleting all the rules in the "filter" table (default).
+iptables -F
+iptables –X
 ```
-##### Нужно добавить в файл подряд следующие правила:
-##### 1) на ws1 применить стратегию когда в начале пишется запрещающее правило, а в конце пишется разрешающее правило (это касается пунктов 4 и 5)
-##### 2) на ws2 применить стратегию когда в начале пишется разрешающее правило, а в конце пишется запрещающее правило (это касается пунктов 4 и 5)
-##### 3) открыть на машинах доступ для порта 22 (ssh) и порта 80 (http)
-##### 4) запретить *echo reply* (машина не должна "пинговаться”)
-##### 5) разрешить *echo reply* (машина должна "пинговаться")
-- В отчёт поместить скрины с содержанием файла */etc/firewall* для каждой машины.
-##### Запустить файлы на обеих машинах командами `chmod +x /etc/firewall.sh` и `/etc/firewall.sh`
-- В отчёт поместить скрины с запуском обоих файлов.
-- В отчёте описать разницу между стратегиями, применёнными в первом и втором файлах.
-#### 4.2. Утилита **nmap**
-##### Командой **ping** найти машину, которая не "пингуется", после чего утилитой **nmap** показать, что хост машины запущен
-*Проверка: в выводе nmap должно быть сказано: `Host is up`*
-- В отчёт поместить скрины с вызовом и выводом использованных команд **ping** и **nmap**.
-- В отчёте описать разницу между стратегиями, применёнными в первом и втором файлах.
+##### The following rules should be added to the file in a row:
+##### 1) on ws1 apply a strategy where a deny rule is written at the beginning and an allow rule is written at the end (this applies to points 4 and 5)
+##### 2) on ws2 apply a strategy where an allow rule is written at the beginning and a deny rule is written at the end (this applies to points 4 and 5)
+##### 3) open access on machines for port 22 (ssh) and port 80 (http)
+##### 4) reject *echo reply* (machine must not ping)
+##### 5) allow *echo reply* (machine must be pinged)
+- Add screenshots of the */etc/firewall* file for each machine to the report.
+##### Run the files on both machines with `chmod +x /etc/firewall.sh` and `/etc/firewall.sh` commands.
+- Add screenshots of both files running to the report.
+- Describe in the report the difference between the strategies used in the first and second files.
 
-##### Сохранить дампы образов виртуальных машин
+#### 4.2. **nmap** utility
+##### Use **ping** command to find a machine which is not pinged, then use **nmap** utility to show that the machine host is up
+*Check: nmap output should say: `Host is up`*.
+- Add screenshots with the call and output of the **ping** and **nmap** commands to the report.
 
-## Part 5. Статическая маршрутизация сети
-`-` Пока что мы соединяли всего две машины, но теперь пришло время для статической маршрутизации целой сети.
+##### Save dumps of the virtual machine images
 
-**== Задание ==**
 
-Сеть: \
+## Part 5. Static network routing
+
+`-` So far we have only connected two machines, but now it's time for static routing of the whole network.
+
+**== Task ==**
+
+Network: \
 <img src="misc/images/part5_network.png" alt="part5_network" width="500"/>
 
-##### Поднять пять виртуальных машин (3 рабочие станции (ws11, ws21, ws22) и 2 роутера (r1, r2))
+##### Start five virtual machines (3 workstations (ws11, ws21, ws22) and 2 routers (r1, r2))
 
-#### 5.1. Настройка адресов машин
-##### Настроить конфигурации машин в *etc/netplan/00-installer-config.yaml* согласно сети на рисунке.
-- В отчёт поместить скрины с содержанием файла *etc/netplan/00-installer-config.yaml* для каждой машины.
-##### Перезапустить сервис сети. Если ошибок нет, то командой `ip -4 a` проверить, что адрес машины задан верно. Также пропинговать ws22 с ws21. Аналогично пропинговать r1 с ws11.
-- В отчёт поместить скрины с вызовом и выводом использованных команд.
-#### 5.2. Включение переадресации IP-адресов.
-##### Для включения переадресации IP, выполните команду на роутерах:
-`sysctl -w net.ipv4.ip_forward=1`
-*При таком подходе переадресация не будет работать после перезагрузки системы.*
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-##### Откройте файл */etc/sysctl.conf* и добавьте в него следующую строку:
+#### 5.1. Configuration of machine addresses
+##### Set up the machine configurations in *etc/netplan/00-installer-config.yaml* according to the network in the picture.
+- Add screenshots of the *etc/netplan/00-installer-config.yaml* file for each machine to the report.
+##### Restart the network service. If there are no errors, check that the machine address is correct with the `ip -4 a`command. Also ping ws22 from ws21. Similarly ping r1 from ws11.
+- Add screenshots with the call and output of the used commands to the report.
+
+#### 5.2. Enabling IP forwarding.
+##### To enable IP forwarding, run the following command on the routers:
+`sysctl -w net.ipv4.ip_forward=1`.
+
+*With this approach, the forwarding will not work after the system is rebooted.*
+- Add a screenshot with the call and output of the used command to the report.
+
+##### Open */etc/sysctl.conf* file and add the following line:
 `net.ipv4.ip_forward = 1`
-*При использовании этого подхода, IP-переадресация включена на постоянной основе.*
-- В отчёт поместить скрин с содержанием изменённого файла */etc/sysctl.conf*.
-#### 5.3. Установка маршрута по-умолчанию
-Пример вывода команды `ip r` после добавления шлюза:
+*With this approach, IP forwarding is enabled permanently.*
+- Add a screenshot of the changed */etc/sysctl.conf* file to the report.
+
+#### 5.3. Default route configuration
+Here is an example of the `ip r' command output after adding a gateway:
 ```
 default via 10.10.0.1 dev eth0
 10.10.0.0/16 dev eth0 proto kernel scope link src 10.10.0.2
 ```
-##### Настроить маршрут по-умолчанию (шлюз) для рабочих станций. Для этого добавить gateway4 \[ip роутера\] в файле конфигураций
-- В отчёт поместить скрин с содержанием файла *etc/netplan/00-installer-config.yaml*.
-##### Вызвать `ip r` и показать, что добавился маршрут в таблицу маршрутизации
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-##### Пропинговать с ws11 роутер r2 и показать на r2, что пинг доходит. Для этого использовать команду:
-`tcpdump -tn -i eth1`
-- В отчёт поместить скрин с вызовом и выводом использованных команд.
-#### 5.4. Добавление статических маршрутов
-##### Добавить в роутеры r1 и r2 статические маршруты в файле конфигураций. Пример для r1 маршрута в сетку 10.20.0.0/26:
+
+##### Configure the default route (gateway) for the workstations. To do this, add gateway4 \[router ip\] in the configuration file
+- Add a screenshot of the *etc/netplan/00-installer-config.yaml* file to the report.
+##### Call `ip r` and show that a route is added to the routing table
+- Add a screenshot with the call and output of the used command to the report.
+##### Ping r2 router from ws11 and show on r2 that the ping is reaching. To do this, use the `tcpdump -tn -i eth1`
+command.
+- Add screenshots with the call and output of the used commands to the report.
+
+#### 5.4. Adding static routes
+##### Add static routes to r1 and r2 in configuration file. Here is an example for r1 route to 10.20.0.0/26:
 ```shell
-# Добавить в конец описания сетевого интерфейса eth1:
+# Add description to the end of the eth1 network interface:
 - to: 10.20.0.0
   via: 10.100.0.12
 ```
-- В отчёт поместить скрины с содержанием изменённого файла *etc/netplan/00-installer-config.yaml* для каждого роутера.
-##### Вызвать `ip r` и показать таблицы с маршрутами на обоих роутерах. Пример таблицы на r1:
+
+- Add screenshots of the changed *etc/netplan/00-installer-config.yaml* file for each router to the report.
+
+##### Call `ip r` and show route tables on both routers. Here is an example of the r1 table:
 ```
 10.100.0.0/16 dev eth1 proto kernel scope link src 10.100.0.11
 10.20.0.0/26 via 10.100.0.12 dev eth1
 10.10.0.0/18 dev eth0 proto kernel scope link src 10.10.0.1
 ```
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-##### Запустить команды на ws11:
-`ip r list 10.10.0.0/[маска сети]` и `ip r list 0.0.0.0/0`
-- В отчёт поместить скрин с вызовом и выводом использованных команд.
-- В отчёте объяснить, почему для адреса 10.10.0.0/\[порт сети\] был выбран маршрут, отличный от 0.0.0.0/0, хотя 10.10.0.0/\[порт сети\] попадает под маршрут по-умолчанию.
-#### 5.5. Построение списка маршрутизаторов
-Пример вывода утилиты **traceroute** после добавления шлюза:
+- Add a screenshot with the call and output of the used command to the report.
+##### Run `ip r list 10.10.0.0/[netmask]` and `ip r list 0.0.0.0/0` commands on ws11.
+- Add a screenshot with the call and the output of the used commands to the report.
+- Explain in the report why a different route other than 0.0.0.0/0 had been selected for 10.10.0.0/\[netmask\] although it could be the default route.
+
+#### 5.5. Making a router list
+Here is an example of the **traceroute** utility output after adding a gateway:
 ```
 1 10.10.0.1 0 ms 1 ms 0 ms
 2 10.100.0.12 1 ms 0 ms 1 ms
 3 10.20.0.10 12 ms 1 ms 3 ms
 ```
-##### Запустить на r1 команду дампа:
-`tcpdump -tnv -i eth0`
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-##### При помощи утилиты **traceroute** построить список маршрутизаторов на пути от ws11 до ws21
-- В отчёт поместить скрин с вызовом и выводом использованной команды.
-- В отчёте, опираясь на вывод, полученный из дампа на r1, объяснить принцип работы построения пути при помощи **traceroute**.
-#### 5.6. Использование протокола **ICMP** при маршрутизации
-##### Запустить на r1 перехват сетевого трафика, проходящего через eth0 с помощью команды:
-`tcpdump -n -i eth0 icmp`
-##### Пропинговать с ws11 несуществующий IP (например, *10.30.0.111*) с помощью команды:
-`ping -c 1 10.30.0.111`
-- В отчёт поместить скрин с вызовом и выводом использованных команд.
+##### Run the `tcpdump -tnv -i eth0` dump command on r1
+##### Use **traceroute** utility to list routers in the path from ws11 to ws21
+- Add a screenshots with the call and the output of the used commands (tcpdump and traceroute) to the report.
+- Based on the output of the dump on r1, explain in the report how path construction works using **traceroute**.
 
-##### Сохранить дампы образов виртуальных машин
+#### 5.6. Using **ICMP** protocol in routing
+##### Run on r1 capturing network traffic going through eth0 with the
+`tcpdump -n -i eth0 icmp` command.
 
-## Part 6. Динамическая настройка IP с помощью **DHCP**
-`-` Следующим нашим шагом будет более подробное знакомство со службой **DHCP**, которую ты уже знаешь.
+##### Ping a non-existent IP (e.g. *10.30.0.111*) from ws11 with the
+`ping -c 1 10.30.0.111` command.
+- Add a screenshot with the call and the output of the used commands to the report.
 
-**== Задание ==**
+##### Save dumps of the virtual machine images
 
-*В данном задании используются виртуальные машины из Части 5*
-##### Указать MAC адрес у ws11, для этого в *etc/netplan/00-installer-config.yaml* надо добавить строки: `macaddress: 10:10:10:10:10:BA`, `dhcp4: true`
-- В отчёт поместить скрин с содержанием изменённого файла *etc/netplan/00-installer-config.yaml*.
-##### Для r2 настроить в файле */etc/dhcp/dhcpd.conf* конфигурацию службы **DHCP**:
-##### 1) указать адрес маршрутизатора по-умолчанию, DNS-сервер и адрес внутренней сети. Пример файла для r2:
+## Part 6. Dynamic IP configuration using **DHCP**
+
+`-` Our next step is to learn more about **DHCP** service, which you already know.
+
+**== Task ==**
+
+*In this task you need to use virtual machines from Part 5*
+
+##### Specify MAC address at ws11 by adding to *etc/netplan/00-installer-config.yaml*:
+`macaddress: 10:10:10:10:10:BA`, `dhcp4: true`
+- Add a screenshot of the changed *etc/netplan/00-installer-config.yaml* file to the report.
+##### For r2, configure the **DHCP** service in the */etc/dhcp/dhcpd.conf* file:
+
+##### 1) specify the default router address, DNS-server and internal network address. Here is an example of a file for r2:
 ```shell
 subnet 10.100.0.0 netmask 255.255.0.0 {}
 
@@ -328,91 +349,96 @@ subnet 10.20.0.0 netmask 255.255.192.0
     option domain-name-servers 10.20.0.1;
 }
 ```
-##### 2) в файле *resolv.conf* прописать `nameserver 8.8.8.8.`
-- В отчёт поместить скрины с содержанием изменённых файлов.
-##### Перезагрузить службу **DHCP** командой `systemctl restart isc-dhcp-server`. Машину ws21 перезагрузить при помощи `reboot` и через `ip a` показать, что она получила адрес. Также пропинговать ws22 с ws21.
-- В отчёт поместить скрины с вызовом и выводом использованных команд.
-##### Для r1 настроить аналогично, но сделать выдачу адресов с жесткой привязкой к MAC-адресу (ws11). Провести аналогичные тесты
-- В отчёте этот пункт описать аналогично настройке для r2.
-##### Запросить с ws21 обновление ip адреса
-- В отчёте поместить скрины ip до и после обновления.
-- В отчёте описать, какими опциями **DHCP** сервера пользовались в данном пункте.
+##### 2) Write `nameserver 8.8.8.8.` in a *resolv.conf* file
+- Add screenshots of the changed files to the report.
+##### Restart the **DHCP** service with `systemctl restart isc-dhcp-server`. Reboot the ws21 machine with `reboot` and show with `ip a` that it has got an address. Also ping ws22 from ws21.
+- Add a screenshot with the call and the output of the used commands to the report.
 
-##### Сохранить дампы образов виртуальных машин
+##### Сonfigure the same way for r1, but make the assignment of addresses strictly linked to the MAC-address (ws11). Run the same tests
+- Describe this part in the report the same way as for r2.
+##### Request ip address update from ws21
+- Add screenshots of ip before and after update to the report
+- Describe in the report what **DHCP** server options were used in this point.
 
-## Part 7. Дополнительно. Проброс портов за **NAT**
-`-` Ну и, наконец, в качестве вишенки на торте, я расскажу тебе про механизм преобразования адресов.
+##### Save dumps of virtual machine images
 
-**== Задание ==**
+## Part 7. **NAT**
 
-*В данном задании используются виртуальные машины из Части 5*
-##### В файле */etc/apache2/ports.conf* на ws22 и r2 изменить строку `Listen 80` на `Listen 0.0.0.0:80`, то есть сделать сервер Apache2 общедоступным
-- В отчёт поместить скрин с содержанием изменённого файла.
-##### Запустить веб-сервер Apache командой `service apache2 start` на ws22 и r1
-- В отчёт поместить скрины с вызовом и выводом использованной команды.
-##### Добавить в фаервол, созданный по аналогии с фаерволом из Части 4, на r2 следующие правила:
-##### 1) Удаление правил в таблице filter - `iptables -F`
-##### 2) Удаление правил в таблице "NAT" - `iptables -F -t nat`
-##### 3) Отбрасывать все маршрутизируемые пакеты - `iptables --policy FORWARD DROP`
-##### Запускать файл также, как в Части 4
-##### Проверить соединение между ws22 и r1 командой `ping`
-*При запуске файла с этими правилами, ws22 не должна "пинговаться" с r1*
-- В отчёт поместить скрины с вызовом и выводом использованной команды.
-##### Добавить в файл ещё одно правило:
-##### 4) Разрешить маршрутизацию всех пакетов протокола **ICMP**
-##### Запускать файл также, как в Части 4
-##### Проверить соединение между ws22 и r1 командой `ping`
-*При запуске файла с этими правилами, ws22 должна "пинговаться" с r1*
-- В отчёт поместить скрины с вызовом и выводом использованной команды.
-##### Добавить в файл ещё два правила:
-##### 5) Включить **SNAT**, а именно маскирование всех локальных ip из локальной сети, находящейся за r2 (по обозначениям из Части 5 - сеть 10.20.0.0)
-*Совет: стоит подумать о маршрутизации внутренних пакетов, а также внешних пакетов с установленным соединением*
-##### 6) Включить **DNAT** на 8080 порт машины r2 и добавить к веб-серверу Apache, запущенному на ws22, доступ извне сети
-*Совет: стоит учесть, что при попытке подключения возникнет новое tcp-соединение, предназначенное ws22 и 80 порту*
-- В отчёт поместить скрин с содержанием изменённого файла.
-##### Запускать файл также, как в Части 4
-*Перед тестированием рекомендуется отключить сетевой интерфейс **NAT** (его наличие можно проверить командой `ip a`), если он включен*
-##### Проверить соединение по TCP для **SNAT**, для этого с ws22 подключиться к серверу Apache на r1 командой:
-`telnet [адрес] [порт]`
-##### Проверить соединение по TCP для **DNAT**, для этого с r1 подключиться к серверу Apache на ws22 командой `telnet` (обращаться по адресу r2 и порту 8080)
-- В отчёт поместить скрины с вызовом и выводом использованных команд.
+And finally, the cherry on the cake, let me tell you about network address translation mechanism.
 
-##### Сохранить дампы образов виртуальных машин
+**== Task ==**
 
-## Part 8. Дополнительно. Знакомство с **SSH Tunnels**
-`-` Пожалуй, на этом у меня всё. Может у тебя появились ещё какие-то вопросы?
+*In this task you need to use virtual machines from Part 5*
 
-`-` Да, я хотел спросить ещё об одной вещи. На работе я краем уха услышал, что в моей компании есть некие проекты по обучению. Подробностей я не знаю, но очень хочется взглянуть... Вдруг будет полезно
+##### In */etc/apache2/ports.conf* file change the line `Listen 80` to `Listen 0.0.0.0:80`on ws22 and r2, i.e. make the Apache2 server public
+- Add a screenshot of the changed file to the report
+##### Start the Apache web server with `service apache2 start` command on ws22 and r1
+- Add screenshots with the call and the output of the used command to the report.
 
-`-` Действительно интересно, но как в этом помогу тебе я?
+##### Add the following rules to the firewall, created similarly to the firewall from Part 4, on r2:
+##### 1) Delete rules in the filter table - `iptables -F`
+##### 2) Delete rules in the "NAT" table - `iptables -F -t nat`
+##### 3) Drop all routed packets - `iptables --policy FORWARD DROP`
+##### Run the file as in Part 4
+##### Check the connection between ws22 and r1 with the `ping` command
+*When running the file with these rules, ws22 should not ping from r1*
+- Add screenshots with the call and the output of the used command to the report.
+##### Add another rule to the file:
+##### 4) Allow routing of all **ICMP** protocol packets
+##### Run the file as in Part 4
+##### Check connection between ws22 and r1 with the `ping` command
+*When running the file with these rules, ws22 should ping from r1*
+- Add screenshots with the call and the output of the used command to the report.
+##### Add two more rules to the file:
+##### 5) Enable **SNAT**, which is masquerade all local ip from the local network behind r2 (as defined in Part 5 - network 10.20.0.0)
+*Tip: it is worth thinking about routing internal packets as well as external packets with an established connection*
+##### 6) Enable **DNAT** on port 8080 of r2 machine and add external network access to the Apache web server running on ws22
+*Tip: be aware that when you will try to connect, there will be a new tcp connection for ws22 and port 80
+- Add a screenshot of the changed file to the report
+##### Run the file as in Part 4
+*Before testing it is recommended to disable the **NAT** network interface in VirtualBox (its presence can be checked with `ip a` command), if it is enabled*
+##### Check the TCP connection for **SNAT** by connecting from ws22 to the Apache server on r1 with the `telnet [address] [port]` command
+##### Check the TCP connection for **DNAT** by connecting from r1 to the Apache server on ws22 with the `telnet` command (address r2 and port 8080)
+- Add screenshots with the call and the output of the used commands to the report.
 
-`-` Дело в том, что, чтобы добраться до этих проектов, нужно получить доступ к закрытой сети. Можешь посоветовать что-нибудь по этому поводу?
+##### Save dumps of virtual machine images
 
-`-` Ну ты, конечно, даёшь... Не уверен на все сто, что это поможет, но могу рассказать тебе про **SSH Tunnels**.
+## Part 8. Bonus. Introduction to **SSH Tunnels**
 
-**== Задание ==**
+`-` Well, that'll be all for now. Do you have any other questions?
 
-*В данном задании используются виртуальные машины из Части 5*
-##### Запустить веб-сервер **Apache** на ws22 только на localhost (то есть не изменять файл */etc/apache2/ports.conf* или, если был изменен ранее, вернуть строку `Listen 80`)
-##### Воспользоваться *Local TCP forwarding* с ws21 до ws22, чтобы получить доступ к веб-серверу на ws22 с ws21
-##### Воспользоваться *Remote TCP forwarding* c ws11 до ws22, чтобы получить доступ к веб-серверу на ws22 с ws11
-##### Для проверки, сработало ли подключение в обоих предыдущих пунктах, перейдите во второй терминал (например, клавишами Alt + F2) и выполните команду:
-`telnet 127.0.0.1 80`
-- В отчёте описать команды, необходимые для выполнения этих четырёх пунктов, а также приложить скриншоты с их вызовом и выводом.
+`-` Yes, I wanted to ask about one more thing. When I was at work, I overheard that there are some kind of training projects in my company. I don't know the details, but I'd really like to take a look... It might be useful.
 
-##### Сохранить дампы образов виртуальных машин
+`-` Yes, it's really interesting, but how can I help you with that?
+
+`-` The problem is that you need to have an access to a closed network to get to these projects. Can you give me any advice on that?
+
+`-` Wow, that’s really something… I'm not sure how much help this will be, but I can tell you about **SSH Tunnels**.
+
+**== Task ==**
+
+*In this task you need to use virtual machines from Part 5*
+
+##### Start the **Apapche** web server on ws22 on localhost only (i.e. do not change */etc/apache2/ports.conf* file or, if previously changed, return the `Listen 80` line)
+##### Use *Local TCP forwarding* from ws21 to ws22 to access the web server on ws22 from ws21
+##### Use *Remote TCP forwarding* from ws11 to ws22 to access the web server on ws22 from ws11
+##### To check if the connection worked in both of the previous steps, go to a second terminal (e.g. with the Alt + F2) and run the `telnet 127.0.0.1 [local port]` command.
+- In the report, describe the commands that you need for doing these 4 steps and add screenshots of their call and output.
+
+##### Save dumps of virtual machine images
 
 ## Chapter IV
-`-` Спасибо тебе большое за помощь!
 
-`-` Всегда пожалуйста! Мне тоже не было лишним вспомнить основы администрирования. Я решил освоить что-нибудь новое и заняться DevOps'ом.
+`-` Thank you so much for the help!
 
-`-` Ого! Уже нашёл, куда устроиться?
+`-` You’re welcome! It was good for me to remember the basics of administration too. By the way, I’ve decided to go into DevOps.
 
-`-` Да, правда придётся переехать. Так что, в следующий раз тебе придётся учиться всему самому.
+`-` Wow! Have you found a job yet?
 
-`-` Рано или поздно мне всё равно пришлось бы начать, так что, может, это только к лучшему. Потом обязательно созвонимся - расскажешь о своих успехах!
+`-` Yes, but I’ll have to move. So, next time you'll have to learn everything on your own.
 
-`-` А ты о своих!
+`-` Sooner or later I'd have to start anyway, so maybe it's for the best. Stay in touch to tell me about how you’re getting on!
 
-\> *Вы ещё какое-то время болтаете на прочие темы, слушая приятную музыку и допивая заказанные напитки, после чего прощаетесь...*
+`-` You too!
+
+\> *You talk about other things for a while, listening to some nice music and finishing your drinks, and then you say goodbye...*.

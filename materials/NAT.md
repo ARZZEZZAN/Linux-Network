@@ -1,4 +1,5 @@
-## **SNAT** и **DNAT**
+## **SNAT** and **DNAT**
+
 **NAT** is an abbreviation for Network Address Translation.
 **NAT** occurs when one of the IP addresses in an IP packet header is changed i.e. either Source IP address or Destination IP address.
 

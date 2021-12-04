@@ -1,23 +1,29 @@
-## Адресация. Продолжение
-#### Классификация IP
-Существует классификация IP адресов, как "частные" и "публичные". Под частные (они же локальные сети) сети зарезервированы следующие диапазоны адресов:
-- *10.0.0.0* — *10.255.255.255* (*10.0.0.0/8* или *10/8*),
-- *172.16.0.0* — *172.31.255.255* (*172.16.0.0/12* или *172.16/12*),
-- *192.168.0.0* — *192.168.255.255* (*192.168.0.0/16* или *192.168/16*).
-- *127.0.0.0* — *127.255.255.255* зарезервировано для петлевых интерфейсов (не используется для обмена между узлами сети), т.н. localhost
+## Addressing. Continuation
 
-#### Порты
-Для каждого из протоколов **TCP** и **UDP** стандарт определяет возможность одновременного выделения на хосте до 65536 уникальных портов,
-идентифицирующихся номерами от 0 до 65535. Весь диапазон портов делиться на 3 группы:
-- 0 до 1023, называемые привилегированными или зарезервированными (используются для системных и некоторых популярных программ)
-- 1024 — 49151 называются зарегистрированными портами.
-- 49151 — 65535 называются динамическими портами.
+#### IP Classification
 
-## Инструмент **ipcalc**
+There are classifications of IP addresses as "private" and "public". The following ranges of addresses are reserved for private (aka LAN) networks:
+- *10.0.0.0* — *10.255.255.255* (*10.0.0.0/8*),
+- *172.16.0.0* — *172.31.255.255* (*172.16.0.0/12*),
+- *192.168.0.0* — *192.168.255.255* (*192.168.0.0/16*).
+- *127.0.0.0* — *127.255.255.255* (Reserved for loopback interfaces (not used for communication between network nodes), so called localhost)
+
+#### Ports
+
+The standard defines for each of the **TCP** and **UDP** protocols the ability to simultaneously allocate up to 65536 unique ports on a host,
+identified by numbers from 0 to 65535.
+The whole range of ports is divided into 3 groups:
+- 0 to 1023 are called privileged or reserved (used for system and some popular programs)
+- 1024 to 49151 are called registered ports.
+- 49151 to 65535 are called dynamic ports.
+
+## **ipcalc**
+
 **ipcalc** is a utility that can perform simple manipulations of IPv4 addresses.
 If you just type **ipcalc** without any input option, it will give you a nice ‘help’ output with some examples which are very helpful to get you started.
 
 #### **ipcalc** Examples
+
 Let’s look at some examples. If you give the IPv4 address as the input of your host, you will get the following output:
 
 <img src="../misc/images/ipcalc1.png" alt="network_route" width="500"/>

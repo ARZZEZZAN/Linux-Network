@@ -46,6 +46,7 @@ The PCs each use one network adapter to connect to internal networks.
 
 
 ## How to add static routes in Ubuntu Linux
+
 Static route addition in Linux may be performed by the command:
 `ip r add [address we want to connect to] dev [network name]`
 
