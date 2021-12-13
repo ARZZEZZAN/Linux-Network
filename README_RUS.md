@@ -278,7 +278,7 @@ iptables -X
 Пример вывода команды `ip r` после добавления шлюза:
 ```
 default via 10.10.0.1 dev eth0
-10.10.0.0/16 dev eth0 proto kernel scope link src 10.10.0.2
+10.10.0.0/18 dev eth0 proto kernel scope link src 10.10.0.2
 ```
 ##### Настроить маршрут по-умолчанию (шлюз) для рабочих станций. Для этого добавить gateway4 \[ip роутера\] в файле конфигураций
 - В отчёт поместить скрин с содержанием файла *etc/netplan/00-installer-config.yaml*.

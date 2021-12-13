@@ -271,7 +271,7 @@ Network: \
 Here is an example of the `ip r' command output after adding a gateway:
 ```
 default via 10.10.0.1 dev eth0
-10.10.0.0/16 dev eth0 proto kernel scope link src 10.10.0.2
+10.10.0.0/18 dev eth0 proto kernel scope link src 10.10.0.2
 ```
 
 ##### Configure the default route (gateway) for the workstations. To do this, add gateway4 \[router ip\] in the configuration file
