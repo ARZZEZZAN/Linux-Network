@@ -24,6 +24,8 @@ The russian version of the task can be found in the repository.
 
 ## Chapter I
 
+![linux_network](misc/images/linux_network.png)
+
 Planet Earth, USA, California, Compton, Seb's Jazz Club, nowadays.
 
 \> *There's a new jazz band playing at the bar. Their jazz is a little more energetic than you're used to, although they're certainly talented.*
