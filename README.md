@@ -1,5 +1,8 @@
 # Linux Network
 
+> При старте работы над проектом просим вас постараться хронометрировать время работы над проектом.
+> По завершении работы над проектом просим вас ответить на два вопроса [в этом опросе](https://forms.gle/x9fFrF7nTM7LmNLK8)
+
 Linux networks configuration on virtual machines.
 
 The russian version of the task can be found in the repository.
