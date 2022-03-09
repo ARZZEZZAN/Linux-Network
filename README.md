@@ -228,7 +228,7 @@ iptables –X
 ##### 1) on ws1 apply a strategy where a deny rule is written at the beginning and an allow rule is written at the end (this applies to points 4 and 5)
 ##### 2) on ws2 apply a strategy where an allow rule is written at the beginning and a deny rule is written at the end (this applies to points 4 and 5)
 ##### 3) open access on machines for port 22 (ssh) and port 80 (http)
-##### 4) reject *echo reply* (machine must not ping)
+##### 4) reject *echo reply* (machine must not ping, i.e. there must be a lock on OUTPUT)
 ##### 5) allow *echo reply* (machine must be pinged)
 - Add screenshots of the */etc/firewall* file for each machine to the report.
 ##### Run the files on both machines with `chmod +x /etc/firewall.sh` and `/etc/firewall.sh` commands.
@@ -338,9 +338,6 @@ Here is an example of the **traceroute** utility output after adding a gateway:
 
 *In this task you need to use virtual machines from Part 5*
 
-##### Specify MAC address at ws11 by adding to *etc/netplan/00-installer-config.yaml*:
-`macaddress: 10:10:10:10:10:BA`, `dhcp4: true`
-- Add a screenshot of the changed *etc/netplan/00-installer-config.yaml* file to the report.
 ##### For r2, configure the **DHCP** service in the */etc/dhcp/dhcpd.conf* file:
 
 ##### 1) specify the default router address, DNS-server and internal network address. Here is an example of a file for r2:
@@ -359,7 +356,10 @@ subnet 10.20.0.0 netmask 255.255.192.0
 ##### Restart the **DHCP** service with `systemctl restart isc-dhcp-server`. Reboot the ws21 machine with `reboot` and show with `ip a` that it has got an address. Also ping ws22 from ws21.
 - Add a screenshot with the call and the output of the used commands to the report.
 
-##### Сonfigure the same way for r1, but make the assignment of addresses strictly linked to the MAC-address (ws11). Run the same tests
+##### Specify MAC address at ws11 by adding to *etc/netplan/00-installer-config.yaml*:
+`macaddress: 10:10:10:10:10:BA`, `dhcp4: true`
+- Add a screenshot of the changed *etc/netplan/00-installer-config.yaml* file to the report.
+##### Сonfigure r1 the same way as r2, but make the assignment of addresses strictly linked to the MAC-address (ws11). Run the same tests
 - Describe this part in the report the same way as for r2.
 ##### Request ip address update from ws21
 - Add screenshots of ip before and after update to the report
