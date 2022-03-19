@@ -348,7 +348,7 @@ default via 10.10.0.1 dev eth0
 ```shell
 subnet 10.100.0.0 netmask 255.255.0.0 {}
 
-subnet 10.20.0.0 netmask 255.255.192.0
+subnet 10.20.0.0 netmask 255.255.255.192
 {
     range 10.20.0.2 10.20.0.50;
     option routers 10.20.0.1;
