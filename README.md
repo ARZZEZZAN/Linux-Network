@@ -152,11 +152,11 @@ As a result of the work you should provide a report with completed tasks. Each p
 ##### 3) Minimum and maximum host in *12.167.38.4* network with masks: */8*, *11111111.11111111.00000000.00000000*, *255.255.254.0* and */4*
 
 #### 1.2. localhost
-##### Define and write in the report whether an application running on localhost can be accessed with the following IPs: *194.34.23.100/16*, *127.0.0.2/24*, *127.1.0.1/8*, *128.0.0.1/8*
+##### Define and write in the report whether an application running on localhost can be accessed with the following IPs: *194.34.23.100*, *127.0.0.2*, *127.1.0.1*, *128.0.0.1*
 
 #### 1.3. Network ranges and segments
 ##### Define and write in a report:
-##### 1) which of the listed IPs can be used as public and which only as private: *10.0.0.45/8*, *134.43.0.2/16*, *192.168.4.2/16*, *172.20.250.4/12*, *172.0.2.1/12*, *192.172.0.1/12*, *172.68.0.2/12*, *172.16.255.255/12*, *10.10.10.10/8*, *192.169.168.1/16*
+##### 1) which of the listed IPs can be used as public and which only as private: *10.0.0.45*, *134.43.0.2*, *192.168.4.2*, *172.20.250.4*, *172.0.2.1*, *192.172.0.1*, *172.68.0.2*, *172.16.255.255*, *10.10.10.10*, *192.169.168.1*
 ##### 2) which of the listed gateway IP addresses are possible for *10.10.0.0/18* network: *10.0.0.1*, *10.10.0.2*, *10.10.10.10*, *10.10.100.1*, *10.10.1.255*
 
 ## Part 2. Static routing between two machines
