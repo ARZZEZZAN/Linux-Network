@@ -241,6 +241,7 @@ iptables –X
 - Add screenshots with the call and output of the **ping** and **nmap** commands to the report.
 
 ##### Save dumps of the virtual machine images
+**p.s. Do not upload dumps to git under any circumstances!**
 
 
 ## Part 5. Static network routing
@@ -329,6 +330,7 @@ Here is an example of the **traceroute** utility output after adding a gateway:
 - Add a screenshot with the call and the output of the used commands to the report.
 
 ##### Save dumps of the virtual machine images
+**p.s. Do not upload dumps to git under any circumstances!**
 
 ## Part 6. Dynamic IP configuration using **DHCP**
 
@@ -366,6 +368,7 @@ subnet 10.20.0.0 netmask 255.255.255.192
 - Describe in the report what **DHCP** server options were used in this point.
 
 ##### Save dumps of virtual machine images
+**p.s. Do not upload dumps to git under any circumstances!**
 
 ## Part 7. **NAT**
 
@@ -407,6 +410,7 @@ And finally, the cherry on the cake, let me tell you about network address trans
 - Add screenshots with the call and the output of the used commands to the report.
 
 ##### Save dumps of virtual machine images
+**p.s. Do not upload dumps to git under any circumstances!**
 
 ## Part 8. Bonus. Introduction to **SSH Tunnels**
 
@@ -431,6 +435,7 @@ And finally, the cherry on the cake, let me tell you about network address trans
 - In the report, describe the commands that you need for doing these 4 steps and add screenshots of their call and output.
 
 ##### Save dumps of virtual machine images
+**p.s. Do not upload dumps to git under any circumstances!**
 
 ## Chapter IV
 
