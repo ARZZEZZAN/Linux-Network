@@ -378,7 +378,7 @@ And finally, the cherry on the cake, let me tell you about network address trans
 
 *In this task you need to use virtual machines from Part 5*
 
-##### In */etc/apache2/ports.conf* file change the line `Listen 80` to `Listen 0.0.0.0:80`on ws22 and r2, i.e. make the Apache2 server public
+##### In */etc/apache2/ports.conf* file change the line `Listen 80` to `Listen 0.0.0.0:80`on ws22 and r1, i.e. make the Apache2 server public
 - Add a screenshot of the changed file to the report
 ##### Start the Apache web server with `service apache2 start` command on ws22 and r1
 - Add screenshots with the call and the output of the used command to the report.
