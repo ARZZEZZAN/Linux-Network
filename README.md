@@ -322,7 +322,7 @@ Here is an example of the **traceroute** utility output after adding a gateway:
 - Based on the output of the dump on r1, explain in the report how path construction works using **traceroute**.
 
 #### 5.6. Using **ICMP** protocol in routing
-##### Run on r1 capturing network traffic going through eth0 with the
+##### Run on r1 network traffic capture going through eth0 with the
 `tcpdump -n -i eth0 icmp` command.
 
 ##### Ping a non-existent IP (e.g. *10.30.0.111*) from ws11 with the
@@ -428,7 +428,8 @@ And finally, the cherry on the cake, let me tell you about network address trans
 
 *In this task you need to use virtual machines from Part 5*
 
-##### Start the **Apapche** web server on ws22 on localhost only (i.e. do not change */etc/apache2/ports.conf* file or, if previously changed, return the `Listen 80` line)
+##### Run a firewall on r2 with the rules from Part 7
+##### Start the **Apapche** web server on ws22 on localhost only (i.e. in */etc/apache2/ports.conf* file change the line `Listen 80` to `Listen localhost:80`)
 ##### Use *Local TCP forwarding* from ws21 to ws22 to access the web server on ws22 from ws21
 ##### Use *Remote TCP forwarding* from ws11 to ws22 to access the web server on ws22 from ws11
 ##### To check if the connection worked in both of the previous steps, go to a second terminal (e.g. with the Alt + F2) and run the `telnet 127.0.0.1 [local port]` command.
