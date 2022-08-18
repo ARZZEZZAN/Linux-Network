@@ -280,7 +280,7 @@ default via 10.10.0.1 dev eth0
 10.10.0.0/18 dev eth0 proto kernel scope link src 10.10.0.2
 ```
 
-##### Configure the default route (gateway) for the workstations. To do this, add gateway4 \[router ip\] in the configuration file
+##### Configure the default route (gateway) for the workstations. To do this, add `default` before the router's IP in the configuration file
 - Add a screenshot of the *etc/netplan/00-installer-config.yaml* file to the report.
 ##### Call `ip r` and show that a route is added to the routing table
 - Add a screenshot with the call and output of the used command to the report.
