@@ -15,7 +15,7 @@ identified by numbers from 0 to 65535.
 The whole range of ports is divided into 3 groups:
 - 0 to 1023 are called privileged or reserved (used for system and some popular programs)
 - 1024 to 49151 are called registered ports.
-- 49151 to 65535 are called dynamic ports.
+- 49152 to 65535 are called dynamic ports.
 
 ## **ipcalc**
 
