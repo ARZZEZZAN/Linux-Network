@@ -111,20 +111,12 @@
 ![Part_2.0.11.jpg](part-2/2.1/ping2.png)  
 
 ### 2.2. Добавление статического маршрута с сохранением  
-#### Перезапустить машины  
-* Используем команду `sudo reboot`  
 
-#### Добавить статический маршрут от одной машины до другой с помощью файла etc/netplan/00-installer-config.yaml  
+#### Добавить статический маршрут от одной машины до другой с помощью файла etc/netplan/00-installer-config.yaml  и пропинговать соединение между машинами  
 * ws1  
-![Part_2.2.1.jpg](Screenshots/Part_2.2.1.jpg)  
+![Part_2.2.1.jpg](part-2/2.2/stat&ping1.png)  
 * ws2  
-![Part_2.2.2.jpg](Screenshots/Part_2.2.2.jpg)  
-
-#### Пропинговать соединение между машинами  
-* ws1  
-![Part_2.2.3.jpg](Screenshots/Part_2.2.3.jpg)  
-* ws2  
-![Part_2.2.4.jpg](Screenshots/Part_2.2.4.jpg)  
+![Part_2.2.2.jpg](part-2/2.2/stat&ping2.png) 
 
 ## Part 3. Утилита iperf3  
 ### 3.1. Скорость соединения  
@@ -136,9 +128,8 @@
 ### 3.2. Утилита iperf3  
 #### Измерить скорость соединения между ws1 и ws2  
 * ws1 выступает в роли сервера. Запуск iperf3 сервер, команда: `iperf3 -s -f m`  
-![Part_3.2.1.jpg](Screenshots/Part_3.2.1.jpg)  
 * ws2 выступает в роли клиента. Запуск iperf3 клиент, команда: `iperf3 -c 192.168.100.10`  
-![Part_3.2.2.jpg](Screenshots/Part_3.2.2.jpg)  
+![Part_3.2.2.jpg](part-3/speed.png) 
 
 ## Part 4. Сетевой экран  
 ### 4.1. Утилита iptables  
