@@ -171,28 +171,27 @@ _Проверка: в выводе nmap должно быть сказано: `H
 
 ## Part 5. Статическая маршрутизация сети  
 #### Поднять пять виртуальных машин (3 рабочие станции (ws11, ws21, ws22) и 2 роутера (r1, r2))  
-![Part_5.0.jpg](Screenshots/Part_5.0.jpg)  
 
 ### 5.1. Настройка адресов машин  
 #### Настроить конфигурации машин в etc/netplan/00-installer-config.yaml согласно сети на рисунке.  
 * ws11  
-![Part_5.1.1.jpg](Screenshots/Part_5.1.1.jpg)  
+![Part_5.1.1.jpg](part-5/adr3.png)  
 
 
 * r1  
-![Part_5.1.2.jpg](Screenshots/Part_5.1.2.jpg)  
+![Part_5.1.1.jpg](part-5/adr4.png)  
 
 
 * ws21  
-![Part_5.1.3.jpg](Screenshots/Part_5.1.3.jpg)  
+![Part_5.1.1.jpg](part-5/adr1.png)  
 
 
 * ws22  
-![Part_5.1.4.jpg](Screenshots/Part_5.1.4.jpg)  
+![Part_5.1.1.jpg](part-5/adr2.png)  
 
 
 * r2  
-![Part_5.1.5.jpg](Screenshots/Part_5.1.5.jpg)  
+![Part_5.1.1.jpg](part-5/adr5.png)  
 
 #### Перезапустить сервис сети. Если ошибок нет, то командой ip -4 a проверить, что адрес машины задан верно. Также пропинговать ws22 с ws21. Аналогично пропинговать r1 с ws11.  
 * ws11 и пинг r1  
