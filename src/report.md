@@ -194,72 +194,78 @@ _Проверка: в выводе nmap должно быть сказано: `H
 ![Part_5.1.1.jpg](part-5/adr5.png)  
 
 #### Перезапустить сервис сети. Если ошибок нет, то командой ip -4 a проверить, что адрес машины задан верно. Также пропинговать ws22 с ws21. Аналогично пропинговать r1 с ws11.  
-* ws11 и пинг r1  
-![Part_5.1.6.jpg](Screenshots/Part_5.1.6.jpg)  
-
-
-* r1  
-![Part_5.1.7.jpg](Screenshots/Part_5.1.7.jpg)  
-
-
-* ws21  
-![Part_5.1.8.jpg](Screenshots/Part_5.1.8.jpg)  
+* ws11 
+![Part_5.1.6.jpg](part-5/ip5.png)  
 
 
 * ws22  
-![Part_5.1.9.jpg](Screenshots/Part_5.1.9.jpg)  
+![Part_5.1.7.jpg](part-5/ip4.png)  
+
+
+* ws21  
+![Part_5.1.8.jpg](part-5/ip3.png)  
+
+
+* r1  
+![Part_5.1.9.jpg](part-5/ip2.png)    
 
 
 * r2  
-![Part_5.1.10.jpg](Screenshots/Part_5.1.10.jpg)  
+![Part_5.1.10.jpg](part-5/ip1.png)  
 
 ### 5.2. Включение переадресации IP-адресов.  
 #### Для включения переадресации IP, выполните команду на роутерах:  
 `sysctl -w net.ipv4.ip_forward=1`  
 * ввод на r1  
-![Part_5.2.1.jpg](Screenshots/Part_5.2.1.jpg)  
-
+![Part_5.1.10.jpg](part-5/sys1.png)   
 
 * ввод на r2  
-![Part_5.2.2.jpg](Screenshots/Part_5.2.2.jpg)  
+![Part_5.1.10.jpg](part-5/sys2.png) 
 
 #### Откройте файл /etc/sysctl.conf и добавьте в него следующую строку:  
 `net.ipv4.ip_forward = 1`  
-* изменяем файл для r1 и r2  
-![Part_5.2.3.jpg](Screenshots/Part_5.2.3.jpg)  
-
+* изменяем файл для r1 
+![Part_5.1.10.jpg](part-5/net1.png)
+* изменяем файл для r2
+![Part_5.1.10.jpg](part-5/net2.png)
 ### 5.3. Установка маршрута по-умолчанию  
 #### Настроить маршрут по-умолчанию (шлюз) для рабочих станций. Для этого добавить default перед IP роутера в файле конфигураций  
 * добавляем шлюз для ws11  
-![Part_5.3.1.jpg](Screenshots/Part_5.3.1.jpg)  
+![Part_5.1.10.jpg](part-5/shl1.png)
 
 
 * для ws21  
-![Part_5.3.2.jpg](Screenshots/Part_5.3.2.jpg)  
+![Part_5.1.10.jpg](part-5/shl2.png)
 
 
 * для ws22  
-![Part_5.3.3.jpg](Screenshots/Part_5.3.3.jpg)  
-
+![Part_5.1.10.jpg](part-5/shl3.png)
 
 * также потребовалось добавить шлюзы для роутеров, чтобы пинг доходил в соседнюю сеть.
-![Part_5.3.4.jpg](Screenshots/Part_5.3.4.jpg)  
+* r1
+![Part_5.1.10.jpg](part-5/shl4.png)
+* r2
+![Part_5.1.10.jpg](part-5/shl5.png)
 
 #### Вызвать ip r и показать, что добавился маршрут в таблицу маршрутизации  
 * ws11  
-![Part_5.3.5.jpg](Screenshots/Part_5.3.5.jpg)  
+![Part_5.1.10.jpg](part-5/ipr1.png)
 
 
 * ws21  
-![Part_5.3.6.jpg](Screenshots/Part_5.3.6.jpg)  
+![Part_5.1.10.jpg](part-5/ipr2.png)
 
 
 * ws22  
-![Part_5.3.7.jpg](Screenshots/Part_5.3.7.jpg)  
+![Part_5.1.10.jpg](part-5/ipr3.png)
 
 
-* роутеры r1 и r2  
-![Part_5.3.8.jpg](Screenshots/Part_5.3.8.jpg)  
+* роутеры r1
+![Part_5.1.10.jpg](part-5/ipr5.png)
+
+
+* роутеры r2
+![Part_5.1.10.jpg](part-5/ipr4.png)
 
 #### Пропинговать с ws11 роутер r2 и показать на r2, что пинг доходит. Для этого использовать команду:  
 `tcpdump -tn -i eth1`  
