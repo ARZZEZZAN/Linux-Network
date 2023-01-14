@@ -12,7 +12,6 @@
    5. [Статическая маршрутизация сети](#part-5-статическая-маршрутизация-сети)
    6. [Динамическая настройка IP с помощью DHCP](#part-6-динамическая-настройка-ip-с-помощью-dhcp)
    7. [NAT](#part-7-nat)
-   8. [Допополнительно. Знакомство с SSH Tunnels](#part-8-дополнительно-знакомство-с-ssh-tunnels)
 
 
 ## Отчет
@@ -436,37 +435,3 @@ ip адрес получен
 
 #### Проверить соединение по TCP для DNAT, для этого с r1 подключиться к серверу Apache на ws22 командой `telnet` (обращаться по адресу r2 и порту 8080)  
 ![Part_7.12.jpg](part-7/r1try.png)  
-
-## Part 8. Дополнительно. Знакомство с SSH Tunnels  
-#### Запустить на r2 фаервол с правилами из Части 7  
-* смотрим правила фаервола  
-![Part_8.1.1.jpg](Screenshots/Part_8.1.1.jpg)  
-
-
-* и запускаем его  
-![Part_8.1.2.jpg](Screenshots/Part_8.1.2.jpg)  
-
-#### Запустить веб-сервер Apache на ws22 только на localhost (то есть в файле _/etc/apache2/ports.conf_ изменить строку `Listen 80` на `Listen localhost:80`)  
-* вносим изменения в файл  
-![Part_8.2.1.jpg](Screenshots/Part_8.2.1.jpg)  
-
-
-* запускаем веб-сервер  
-![Part_8.2.2.jpg](Screenshots/Part_8.2.2.jpg)  
-
-#### Воспользоваться Local TCP forwarding с ws21 до ws22, чтобы получить доступ к веб-серверу на ws22 с ws21  
-* воспользуемся командой `ssh -L [local_port]:localhost:[local_port] [remote_ip]`  
-![Part_8.3.1.jpg](Screenshots/Part_8.3.1.jpg)
-
-
-* проверим с помощью команды `telnet 127.0.0.1 5555`  
-![Part_8.3.2.jpg](Screenshots/Part_8.3.2.jpg)  
-
-
-#### Воспользоваться Remote TCP forwarding c ws11 до ws22, чтобы получить доступ к веб-серверу на ws22 с ws11  
-* воспользуемся командой `ssh -R [remote_port]:localhost:[local_port] [remote_ip]`  
-![Part_8.4.1.jpg](Screenshots/Part_8.4.1.jpg)
-
-* проверим с помощью команды `telnet 127.0.0.1 22`  
-![Part_8.4.2.jpg](Screenshots/Part_8.4.2.jpg)  
-
