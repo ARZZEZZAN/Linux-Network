@@ -392,56 +392,50 @@ ip адрес получен
 ## Part 7. NAT  
 #### В файле /etc/apache2/ports.conf на ws22 и r1 изменить строку Listen 80 на Listen 0.0.0.0:80, то есть сделать сервер Apache2 общедоступным  
 * ws22  
-![Part_7.1.1.jpg](Screenshots/Part_7.1.1.jpg)  
-
+![Part_7.1.1.jpg](part-7/ws22port.png)
 
 * r1  
-![Part_7.1.2.jpg](Screenshots/Part_7.1.2.jpg)  
+![Part_7.1.2.jpg](part-7/r1port.png)
 
 #### Запустить веб-сервер Apache командой `service apache2 start` на ws22 и r1  
 * ws22  
-![Part_7.2.1.jpg](Screenshots/Part_7.2.1.jpg)  
+![Part_7.2.1.jpg](part-7/r1start.png) 
 
 
 * r1  
-![Part_7.2.2.jpg](Screenshots/Part_7.2.2.jpg)  
+![Part_7.2.2.jpg](part-7/ws22start.png)
 
 #### Добавить в фаервол, созданный по аналогии с фаерволом из Части 4, на r2 следующие правила:  
 1) Удаление правил в таблице filter - iptables -F
 2) Удаление правил в таблице "NAT" - iptables -F -t nat
 3) Отбрасывать все маршрутизируемые пакеты - iptables --policy FORWARD DROP  
-![Part_7.3.jpg](Screenshots/Part_7.3.jpg)  
+![Part_7.3.jpg](part-7/iptable1.png) 
 
 #### Запускать файл также, как в Части 4  
-![Part_7.4.jpg](Screenshots/Part_7.4.jpg)  
+![Part_7.7.jpg](part-7/chmod.png)
 
 #### Проверить соединение между ws22 и r1 командой ping  
-![Part_7.5.jpg](Screenshots/Part_7.5.jpg)  
+![Part_7.5.jpg](part-7/ping.png)
 
 #### Добавить в файл ещё одно правило:  
 4) Разрешить маршрутизацию всех пакетов протокола ICMP  
-![Part_7.6.jpg](Screenshots/Part_7.6.jpg)  
+![Part_7.6.jpg](part-7/iptable2.png) 
 
-#### Запускать файл также, как в Части 4  
-![Part_7.7.jpg](Screenshots/Part_7.7.jpg)  
 
 #### Проверить соединение между ws22 и r1 командой ping  
-![Part_7.8.jpg](Screenshots/Part_7.8.jpg)  
+![Part_7.8.jpg](part-7/pingws22.png)  
 
 #### Добавить в файл ещё два правила:  
 5) Включить SNAT, а именно маскирование всех локальных ip из локальной сети, находящейся за r2 (по обозначениям из Части 5 - сеть 10.20.0.0)
 6) Включить DNAT на 8080 порт машины r2 и добавить к веб-серверу Apache, запущенному на ws22, доступ извне сети  
-![Part_7.9.jpg](Screenshots/Part_7.9.jpg)  
-
-#### Запускать файл также, как в Части 4  
-![Part_7.10.jpg](Screenshots/Part_7.10.jpg)  
+![Part_7.9.jpg](part-7/snatdnat.png)  
 
 #### Проверить соединение по TCP для SNAT, для этого с ws22 подключиться к серверу Apache на r1 командой:  
 `telnet [адрес] [порт]`  
-![Part_7.11.jpg](Screenshots/Part_7.11.jpg)  
+![Part_7.11.jpg](part-7/ws22try.png)  
 
 #### Проверить соединение по TCP для DNAT, для этого с r1 подключиться к серверу Apache на ws22 командой `telnet` (обращаться по адресу r2 и порту 8080)  
-![Part_7.12.jpg](Screenshots/Part_7.12.jpg)  
+![Part_7.12.jpg](part-7/r1try.png)  
 
 ## Part 8. Дополнительно. Знакомство с SSH Tunnels  
 #### Запустить на r2 фаервол с правилами из Части 7  
