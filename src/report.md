@@ -341,52 +341,52 @@ _Проверка: в выводе nmap должно быть сказано: `H
 
 #### 2) в файле resolv.conf прописать nameserver 8.8.8.8.  
 * вносим изменения в файл _/etc/resolv.conf_  
-![Part_6.1.2.jpg](Screenshots/Part_6.1.2.jpg)  
+![Part_6.1.2.jpg](part-6/resolve1.png)
 
 #### Перезагрузить службу DHCP командой systemctl restart isc-dhcp-server. Машину ws21 перезагрузить при помощи reboot и через ip a показать, что она получила адрес. Также пропинговать ws22 с ws21.  
 * перезагружаем службу DHCP  
-![Part_6.2.1.jpg](Screenshots/Part_6.2.1.jpg)  
+![Part_6.2.1.jpg](part-6/restart.png)
 
 
 * Перезагружаем ws21 с помощью команды `sudo reboot` и вызываем команду `ip a`  
-![Part_6.2.2.jpg](Screenshots/Part_6.2.2.jpg)  
+![Part_6.2.2.jpg](part-6/ipa2.png)
 ip адрес получен  
 
 
 * пингуем ws22 с ws21  
-![Part_6.2.3.jpg](Screenshots/Part_6.2.3.jpg)  
+![Part_6.2.3.jpg](part-6/ws21.png)
 
 #### Указать MAC адрес у ws11, для этого в etc/netplan/00-installer-config.yaml надо добавить строки: macaddress: 10:10:10:10:10:BA, dhcp4: true  
 * вносим изменения в в _/etc/netplan/00-installer-config.yaml_  
-![Part_6.3.jpg](Screenshots/Part_6.3.jpg)  
+![Part_6.3.jpg](part-6/mac.png)
 
 #### Для r1 настроить аналогично r2, но сделать выдачу адресов с жесткой привязкой к MAC-адресу (ws11). Провести аналогичные тесты  
 * Снова скачиваем isc-dhcp-server и вносим изменения в файл _/etc/dhcp/dhcpd.conf_  
-![Part_6.4.1.jpg](Screenshots/Part_6.4.1.jpg)  
+![Part_6.4.1.jpg](part-6/dhcpd2.png)
 
 
 * затем редактируем файл _/etc/resolv.conf_  
-![Part_6.4.2.jpg](Screenshots/Part_6.4.2.jpg)  
+![Part_6.4.2.jpg](part-6/resolve2.png)
 
 
 * перезагружаем службу DHCP  
-![Part_6.4.3.jpg](Screenshots/Part_6.4.3.jpg)  
+![Part_6.4.3.jpg](part-6/restart1.png)  
 
 
 * перезагружаем ws11 и вызываем `ip a`  
-![Part_6.5.1.jpg](Screenshots/Part_6.4.4.jpg)  
+![Part_6.5.1.jpg](part-6/ws11ip.png)
 
 
 * пингуем ws22  
-![Part_6.5.2.jpg](Screenshots/Part_6.4.5.jpg)  
+![Part_6.5.2.jpg](part-6/ws22.png)
 
 #### Запросить с ws21 обновление ip адреса  
 * `ip a` на ws21 до обновления  
-![Part_6.5.1.jpg](Screenshots/Part_6.5.1.jpg)  
+![Part_6.5.1.jpg](part-6/ipa2.png)
 
 
 * вызываем команду `sudo dhclient enp0s8 -r`, потом `sudo dhclient enp0s8` и снова `ip a`  
-![Part_6.5.2.jpg](Screenshots/Part_6.5.2.jpg)
+![Part_6.5.2.jpg](part-6/ipa2.1.png)
 * в данном пункте пользовался опцией -r для того, чтобы очистить список ip адресов.  
 
 ## Part 7. NAT  
