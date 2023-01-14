@@ -307,7 +307,7 @@ _Проверка: в выводе nmap должно быть сказано: `H
 `tcpdump -tnv -i eth0`  
 
 #### При помощи утилиты traceroute построить список маршрутизаторов на пути от ws11 до ws21  
-в первую очередь установим утилиту traceroute командой `sudo apt install traceroute`.
+Прежде всего нужно выключить адаптер внутренней сети для получения интернет соединения, также выключить firewalls `sudo ufw disable` на всех машинах(желательно)
 * вызов и вывод traceroute на ws11  
 ![Part_5.5.1.jpg](part-5/trac.png)
 
@@ -335,10 +335,9 @@ _Проверка: в выводе nmap должно быть сказано: `H
 
 ## Part 6. Динамическая настройка IP с помощью DHCP  
 #### Для r2 настроить в файле /etc/dhcp/dhcpd.conf конфигурацию службы DHCP:  
-* для начала скачаем isc-dhcp-server командой `sudo apt install isc-dhcp-server`
 #### 1) указать адрес маршрутизатора по-умолчанию, DNS-сервер и адрес внутренней сети.  
 * вносим изменения в файл _/etc/dhcp/dhcpd.conf_  
-![Part_6.1.1.jpg](Screenshots/Part_6.1.1.jpg)  
+![Part_6.1.1.jpg](part-6/dhcpd1.png)
 
 #### 2) в файле resolv.conf прописать nameserver 8.8.8.8.  
 * вносим изменения в файл _/etc/resolv.conf_  
